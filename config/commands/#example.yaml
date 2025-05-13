@@ -1,0 +1,5 @@
+command_description: "Example description"
+permissions:
+  level: 0
+  standard_permissions: # ban_members, etc..
+    - "send_messages"

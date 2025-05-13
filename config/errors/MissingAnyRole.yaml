@@ -1,0 +1,12 @@
+title: "No permission"
+description: "You do not have permission to run this command."
+color: "0xFF0000"
+author:
+  name: ""
+  icon_url: ""
+fields:
+footer:
+  text: "OGPB • Roles & Permissions"
+  icon_url: ""
+thumbnail: ""
+timestamp: true

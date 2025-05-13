@@ -1,0 +1,12 @@
+title: "Example"
+description: "Example Error"
+color: "0xFF0000"
+author:
+  name: ""
+  icon_url: ""
+fields:
+footer:
+  text: "OGPB • Example"
+  icon_url: ""
+thumbnail: ""
+timestamp: true

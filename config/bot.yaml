@@ -1,0 +1,11 @@
+logging:
+  log_loading: true
+  log_standard_events: false
+  log_commands: true
+  log_standard_errors: true
+status:
+  rotating: true # Defaults to 0 in status list
+  rotate_time: 10
+  status:
+    - "testing"
+    - "testing 2"

@@ -1,0 +1,6 @@
+levels:
+    "role_id": 0
+
+commands_whitelist:
+    - example:
+        - 0
