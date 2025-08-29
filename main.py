@@ -1,9 +1,9 @@
-from discord import Client, Intents
+from discord import Bot
 from dotenv import load_dotenv
 from os import getenv
 
 load_dotenv()
-client = Client(intents=Intents.all())
+client = Bot(prefix="-")
 bot_token = getenv("BOT_TOKEN")
 
 if __name__ == "__main__":
