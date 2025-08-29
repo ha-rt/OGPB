@@ -1,6 +1,6 @@
 import yaml
 import os
-from discord import client
+from discord import client, Guild
 from utils.yaml import get_yaml_safely
 
 GUILDS_DIR = "guilds"
@@ -19,6 +19,8 @@ def load_or_create_guild_config(bot, guild_id: int) -> dict:
     if guild_info:
         return guild_info
 
+    print(f"[LOADER] Guild with the ID of {guild_id} added OGPB during an offline period or the file was corrupted.")
+
     example_config = get_yaml_safely(os.path.join(GUILDS_DIR, EXAMPLE_GUILD_FILE))
     if example_config is None:
         example_config = {"levels": {}, "log_channels": {}, "command_overrides": {}}
@@ -36,6 +38,10 @@ def load_or_create_guild_config(bot, guild_id: int) -> dict:
         yaml.safe_dump(example_config, f, default_flow_style=False, sort_keys=False)
 
     return example_config
+
+def load_all_guilds(bot, guilds: list[Guild]):
+    for guild in guilds:
+        load_or_create_guild_config(bot, guild.id)
 
 def get_guild_permissions_for_command(bot: client, guild_id: int, command_name: str):
     guild_info = load_or_create_guild_config(bot, guild_id)

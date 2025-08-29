@@ -3,7 +3,6 @@ from os import path
 
 def get_yaml_safely(file_path):
     if not path.exists(file_path):
-        print(f"Error: File '{file_path}' does not exist.")
         return None
 
     try:

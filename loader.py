@@ -1,8 +1,14 @@
 from pathlib import Path
 import importlib
+from utils.yaml import get_yaml_safely
+
 
 EVENTS_PATH = Path("events")
 COMMANDS_PATH = Path("commands")
+CONFIG_PATH = "config/bot.yaml"
+
+config = get_yaml_safely(CONFIG_PATH)
+LOG_LOADING = config.get("debug", {}).get("log_loading", False)
 
 
 def get_files_from_directory(directory: Path):
@@ -29,7 +35,8 @@ class Loader:
                 module = importlib.import_module(module_path)
                 if hasattr(module, "setup"):
                     module.setup(self.bot)
-                print(f"[LOADER] Loaded event: {filename}")
+                if LOG_LOADING:
+                    print(f"[LOADER] Loaded event: {filename}")
             except Exception as e:
                 print(f"[LOADER] Failed to load event {filename}: {e}")
 
@@ -38,6 +45,7 @@ class Loader:
             module_path = f"{COMMANDS_PATH.name}.{filename}"
             try:
                 self.bot.load_extension(module_path)
-                print(f"[LOADER] Loaded command: {filename}")
+                if LOG_LOADING:
+                    print(f"[LOADER] Loaded command: {filename}")
             except Exception as e:
                 print(f"[LOADER] Failed to load command {filename}: {e}")

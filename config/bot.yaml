@@ -1,0 +1,9 @@
+debug:
+  log_loading: true
+  log_events: true
+status:
+  rotating: false # Defaults to 0 in status list
+  rotate_time: 10
+  status:
+    - type: custom
+      text: "OGPB OT!"
