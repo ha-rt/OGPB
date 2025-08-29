@@ -26,5 +26,5 @@ Create a .env file in the cloned repository with a BOT_TOKEN key
 
 Run the main file
 ```
-python main.py
+python src/main.py
 ```
