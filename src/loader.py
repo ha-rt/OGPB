@@ -3,8 +3,8 @@ import importlib
 from utils.yaml import get_yaml_safely
 
 
-EVENTS_PATH = Path("events")
-COMMANDS_PATH = Path("commands")
+EVENTS_PATH = Path(__file__).parent / "events"
+COMMANDS_PATH = Path(__file__).parent / "commands"
 CONFIG_PATH = "config/bot.yaml"
 
 config = get_yaml_safely(CONFIG_PATH)

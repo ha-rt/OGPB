@@ -6,5 +6,5 @@ venv/
 .vscode/
 *.code-workspace
 
-guilds/*
+*/guilds/*
 !example.yaml

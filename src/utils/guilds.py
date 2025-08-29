@@ -3,7 +3,7 @@ import os
 from discord import client, Guild
 from utils.yaml import get_yaml_safely
 
-GUILDS_DIR = "guilds"
+GUILDS_DIR = "config/guilds"
 EXAMPLE_GUILD_FILE = "example.yaml"
 
 def get_guild_file_path(guild_id: int) -> str:
