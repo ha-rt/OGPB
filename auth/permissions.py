@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from utils.guilds import get_guild_permissions_for_command,  load_or_create_guild_config\
+from utils.guilds import get_guild_permissions_for_command,  load_or_create_guild_config
 
 def summarize_permissions(perms):
     return [perm for perm, allowed in perms if allowed]
