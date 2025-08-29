@@ -1,3 +1,43 @@
-class Loader():
+from pathlib import Path
+import importlib
+
+EVENTS_PATH = Path("events")
+COMMANDS_PATH = Path("commands")
+
+
+def get_files_from_directory(directory: Path):
+    files = []
+    for file in directory.iterdir():
+        if (
+            file.is_file()
+            and file.suffix == ".py"
+            and not file.name.startswith("__")
+            and not file.name.startswith("#")
+        ):
+            files.append(file.stem)
+    return files
+
+
+class Loader:
     def __init__(self, bot):
-        pass
+        self.bot = bot
+
+    def load_events(self):
+        for filename in get_files_from_directory(EVENTS_PATH):
+            module_path = f"{EVENTS_PATH.name}.{filename}"
+            try:
+                module = importlib.import_module(module_path)
+                if hasattr(module, "setup"):
+                    module.setup(self.bot)
+                print(f"[LOADER] Loaded event: {filename}")
+            except Exception as e:
+                print(f"[LOADER] Failed to load event {filename}: {e}")
+
+    def load_commands(self):
+        for filename in get_files_from_directory(COMMANDS_PATH):
+            module_path = f"{COMMANDS_PATH.name}.{filename}"
+            try:
+                self.bot.load_extension(module_path)
+                print(f"[LOADER] Loaded command: {filename}")
+            except Exception as e:
+                print(f"[LOADER] Failed to load command {filename}: {e}")

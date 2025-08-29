@@ -1,10 +1,15 @@
 from discord import Bot
 from dotenv import load_dotenv
 from os import getenv
+from loader import Loader
 
 load_dotenv()
 client = Bot(prefix="-")
 bot_token = getenv("BOT_TOKEN")
+loader = Loader(client)
 
 if __name__ == "__main__":
+    loader.load_events()
+    loader.load_commands()
+    
     client.run(bot_token)
