@@ -1,0 +1,17 @@
+
+# role id: level
+levels:
+  "0": 0
+
+# type: channel id
+log_channels:
+  "moderation": ""
+
+command_levels:
+  "command_name": 
+    override:
+      permission: 
+        "permission_name"
+      role:
+        "role_id"
+      level: 0 # minimum level
