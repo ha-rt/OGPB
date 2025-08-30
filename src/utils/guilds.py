@@ -1,10 +1,37 @@
 import yaml
 import os
-from discord import client, Guild
+from discord import client, Guild, ApplicationContext, Embed
 from utils.yaml import get_yaml_safely
 
 GUILDS_DIR = "config/guilds"
 EXAMPLE_GUILD_FILE = "example.yaml"
+
+async def log_info_to_guild(ctx: ApplicationContext, type: str, content: Embed | str):
+    guild = ctx.guild
+    if guild is None:
+        return  
+
+    guild_config = load_or_create_guild_config(ctx.bot, guild.id)
+
+    log_channels = guild_config.get("log_channels", {})
+    channel_id = log_channels.get(type)
+
+    if not channel_id:
+        return
+
+    channel = guild.get_channel(int(channel_id))
+    if channel is None:
+        return
+
+    try:
+        if isinstance(content, Embed):
+            await channel.send(embed=content)
+        elif isinstance(content, str):
+            await channel.send(content)
+        else:
+            raise TypeError("content must be an Embed or str")
+    except Exception as e:
+        print(f"[LOGGER] Failed to log info in guild {guild.id}: {e}")
 
 def get_guild_file_path(guild_id: int) -> str:
     return os.path.join(GUILDS_DIR, f"{guild_id}.yaml")
