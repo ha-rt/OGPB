@@ -8,3 +8,8 @@ venv/
 
 */guilds/*
 !example.yaml
+
+temp
+
+*/embeds/*
+!example.yaml
