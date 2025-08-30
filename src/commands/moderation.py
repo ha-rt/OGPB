@@ -2,6 +2,10 @@ import discord
 from discord.ext import commands
 from auth.permissions import check_permissions_for_command
 from utils.autocompleter import banned_users_autocomplete
+from utils.embeds import load_embed_from_yaml, load_data_into_embed
+from utils.logger import ModerationLogger
+
+logger = ModerationLogger()
 
 class Moderation(commands.Cog):
     def __init__(self, bot: discord.Bot):
@@ -22,7 +26,7 @@ class Moderation(commands.Cog):
             return
 
         deleted = await ctx.channel.purge(limit=amount)
-        await ctx.response.send_message(f"Deleted {len(deleted)} messages.", ephemeral=True)
+        await ctx.response.send_message(f"Bulk deleted {len(deleted)} messages.", ephemeral=True)
 
     @discord.slash_command(
         name="ban",
@@ -37,21 +41,27 @@ class Moderation(commands.Cog):
         self, 
         ctx: discord.ApplicationContext, 
         member: discord.Member, 
-        reason: str = None
+        reason: str = None,
+        evidence: str = None,
+        notes: str = None,
     ):
-        reason = reason or "No reason provided"
-
+        reason = reason or "No Reason Provided"
         try:
-            await member.send(
-                f"You have been banned from **{ctx.guild.name}**.\nReason: {reason}"
-            )
+            ban_embed = load_data_into_embed(load_embed_from_yaml("recievedban.yaml"), 
+                                             {"server": ctx.guild.name, 
+                                              "moderator_id": str(ctx.author.id),
+                                              "reason": reason,
+                                              }
+                                             )
+
+            await member.send(embed=ban_embed)
         except discord.Forbidden:
             pass
 
         await ctx.guild.ban(member, reason=reason)
+        await logger.log_ban(ctx, member, reason, evidence, notes)
         await ctx.response.send_message(
-            f"🚫 {member.mention} has been banned.\nReason: {reason}",
-            ephemeral=True
+            f"<:ban_hammer:1411243266246049883> {member.mention} has been banned for *{reason}*",
         )
 
     @discord.slash_command(
@@ -67,31 +77,29 @@ class Moderation(commands.Cog):
         self, 
         ctx: discord.ApplicationContext, 
         user: discord.Option(str, "User to unban", autocomplete=banned_users_autocomplete),  # type: ignore
-        reason: str = None
+        notes: str = None,
     ):
-        reason = reason or "No reason provided"
-
         try:
             user_id = int(user.split("(")[-1].strip(")"))
         except (ValueError, IndexError):
             await ctx.response.send_message(
-                "❌ Could not parse the user ID. Please try again.", ephemeral=True
+                "An error occured when getting the user ID of the banned user, please try again!", ephemeral=True
             )
             return
 
         discord_user = await self.bot.fetch_user(user_id)
 
         try:
-            await ctx.guild.unban(discord_user, reason=reason)
+            await ctx.guild.unban(discord_user)
         except discord.NotFound:
             await ctx.response.send_message(
-                f"❌ User with ID `{user_id}` is not banned.", ephemeral=True
+                f"<@{user_id}> is not banned.", ephemeral=True
             )
             return
 
+        await logger.log_unban(ctx, discord_user, notes)
         await ctx.response.send_message(
-            f"✅ {discord_user.mention} has been unbanned.\nReason: {reason}",
-            ephemeral=True
+            f"<:unban_hammer:1411243154920964147> {discord_user.mention} has had their ban *revoked*.",
         )
 
 def setup(bot: discord.Bot):
