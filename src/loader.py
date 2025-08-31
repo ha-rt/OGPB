@@ -2,14 +2,12 @@ from pathlib import Path
 import importlib
 from utils.yaml import get_yaml_safely
 
-
 EVENTS_PATH = Path(__file__).parent / "events"
 COMMANDS_PATH = Path(__file__).parent / "commands"
 CONFIG_PATH = "config/bot.yaml"
 
 config = get_yaml_safely(CONFIG_PATH)
 LOG_LOADING = config.get("debug", {}).get("log_loading", False)
-
 
 def get_files_from_directory(directory: Path):
     files = []
@@ -22,7 +20,6 @@ def get_files_from_directory(directory: Path):
         ):
             files.append(file.stem)
     return files
-
 
 class Loader:
     def __init__(self, bot):
