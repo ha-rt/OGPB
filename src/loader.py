@@ -1,12 +1,13 @@
 from pathlib import Path
 import importlib
+from os import getenv
 from utils.yaml import get_yaml_safely
 
 EVENTS_PATH = Path(__file__).parent / "events"
 COMMANDS_PATH = Path(__file__).parent / "commands"
-CONFIG_PATH = "config/bot.yaml"
+CONFIG_FILE = getenv("CONFIG_FILE")
 
-config = get_yaml_safely(CONFIG_PATH)
+config = get_yaml_safely(CONFIG_FILE)
 LOG_LOADING = config.get("debug", {}).get("log_loading", False)
 
 def get_files_from_directory(directory: Path):
