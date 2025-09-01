@@ -9,7 +9,7 @@ def check_permissions_for_command(ctx: commands.Context) -> bool:
     guild_id = ctx.guild.id
     user = ctx.author
 
-    guild_permissions = get_guild_permissions_for_command(ctx.bot, guild_id, ctx.command.name)
+    guild_permissions = get_guild_permissions_for_command(guild_id, ctx.command.name)
     if not guild_permissions:
         return True
 
@@ -32,7 +32,7 @@ def check_permissions_for_command(ctx: commands.Context) -> bool:
 
     required_level = guild_permissions.get("level", 0)
     if required_level > 0:
-        guild_info = load_or_create_guild_config(ctx.bot, guild_id)
+        guild_info = load_or_create_guild_config(guild_id)
         role_levels = guild_info.get("levels", {})
         user_level = max((role_levels.get(str(role.id), 0) for role in user.roles), default=0)
         if user_level < required_level:

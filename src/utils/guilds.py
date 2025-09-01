@@ -1,15 +1,20 @@
 import yaml
 from os import path, getenv, makedirs
-from discord import client, Guild, ApplicationContext, Embed
+from discord import Bot, Guild, ApplicationContext, Embed
 from utils.yaml import get_yaml_safely
 
 GUILDS_DIR = getenv("GUILDS_DIR")
 EXAMPLE_GUILD_FILE = getenv("EXAMPLE_GUILD_FILE")
+BOT: Bot | None = None
 
 def get_guild_file_path(guild_id: int) -> str:
     return path.join(GUILDS_DIR, f"{guild_id}.yaml")
 
-def load_or_create_guild_config(bot, guild_id: int) -> dict:
+def load_bot_into_memory(bot):
+    global BOT
+    BOT = bot
+
+def load_or_create_guild_config(guild_id: int) -> dict:
     guild_file_path = get_guild_file_path(guild_id)
 
     if not path.exists(GUILDS_DIR):
@@ -28,7 +33,7 @@ def load_or_create_guild_config(bot, guild_id: int) -> dict:
     example_config["command_overrides"] = {}
     example_config["log_channels"] = {}
 
-    guild = bot.get_guild(guild_id)
+    guild = BOT.get_guild(guild_id)
     if guild is None:
         raise ValueError(f"Guild with ID {guild_id} not found.")
 
@@ -39,12 +44,12 @@ def load_or_create_guild_config(bot, guild_id: int) -> dict:
 
     return example_config
 
-async def log_info_to_guild(ctx: ApplicationContext, type: str, content: Embed | str):
-    guild = ctx.guild
+async def log_info_to_guild(guild_id: int, type: str, content: Embed | str):
+    guild = BOT.get_guild(guild_id)
     if guild is None:
         return  
 
-    guild_config = load_or_create_guild_config(ctx.bot, guild.id)
+    guild_config = load_or_create_guild_config(guild.id)
 
     log_channels = guild_config.get("log_channels", {})
     channel_id = log_channels.get(type)
@@ -67,10 +72,10 @@ async def log_info_to_guild(ctx: ApplicationContext, type: str, content: Embed |
         print(f"[LOGGER] Failed to log info in guild {guild.id}: {e}")
 
 
-def load_all_guilds(bot, guilds: list[Guild]):
+def load_all_guilds(guilds: list[Guild]):
     for guild in guilds:
-        load_or_create_guild_config(bot, guild.id)
+        load_or_create_guild_config(guild.id)
 
-def get_guild_permissions_for_command(bot: client, guild_id: int, command_name: str):
-    guild_info = load_or_create_guild_config(bot, guild_id)
+def get_guild_permissions_for_command(guild_id: int, command_name: str):
+    guild_info = load_or_create_guild_config(guild_id)
     return guild_info.get("command_overrides", {}).get(command_name)

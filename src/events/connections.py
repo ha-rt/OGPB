@@ -65,7 +65,7 @@ class Connections(commands.Cog):
         if not self.rotate_enabled and self.status_list:
             await self.set_status(self.status_list[0])
 
-        load_all_guilds(self.bot, self.bot.guilds)
+        load_all_guilds(self.bot.guilds)
 
 def setup(bot: discord.Bot):
     bot.add_cog(Connections(bot))

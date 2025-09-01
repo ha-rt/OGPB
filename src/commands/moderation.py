@@ -56,8 +56,9 @@ class Moderation(commands.Cog):
         with suppress(discord.Forbidden, discord.HTTPException):
             await member.send(embed=ban_embed)
 
+        await logger.load_user_into_queue(ctx.guild.id, member, "ban")
         await ctx.guild.ban(member, reason=reason)
-        await logger.log_ban(ctx, member, reason, evidence, notes)
+        await logger.log_ban(ctx.guild, ctx.author, member, reason, evidence, notes)
         await ctx.response.send_message(
             f"{ban_emoji} {member.mention} has been banned for *{reason}*",
         )
@@ -76,8 +77,10 @@ class Moderation(commands.Cog):
         notes: str = None,
     ):
         try:
+            
             user_id = int(user.split("(")[-1].strip(")"))
             discord_user = await self.bot.fetch_user(user_id)
+            await logger.load_user_into_queue(ctx.guild.id, discord_user, "unban")
             await ctx.guild.unban(discord_user)
         except (ValueError, IndexError):
             await ctx.response.send_message(f"{failed_emoji} An error occured when getting the user ID of the banned user, please try again!", ephemeral=True)
