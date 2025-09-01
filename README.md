@@ -4,27 +4,34 @@ A general purpose bot which hopes to encompass as many features as possible.
 
 ## Building & Running
 
-Clone the repository
-```
-git clone https://github.com/ha-rt/OGPB
+### 1. Clone the repository
+git clone https://github.com/ha-rt/OGPB  
 cd OGPB
-```
 
-Create a python virtual environment
-```
+### 2. Create a Python virtual environment
 python -m venv venv
-# In cmd.exe
+
+Activate the virtual environment depending on your system:
+
+- **Windows (Command Prompt)**  
 venv\Scripts\activate.bat
-# In PowerShell
+
+- **Windows (PowerShell)**  
 venv\Scripts\Activate.ps1
-# In Linux or MacOS
-source venv\bin\activate
-```
-Credit to [python.land](https://python.land/virtual-environments/virtualenv) for the above commands
 
-Create a .env file in the cloned repository with a BOT_TOKEN key
+- **Linux / macOS**  
+source venv/bin/activate
 
-Run the main file
-```
+> Credit: [python.land](https://python.land/virtual-environments/virtualenv)
+
+### 3. Set up your `.env` file
+Copy the `.env.template` file to `.env` and add your bot token:
+
+cp .env.template .env
+
+Or manually copy/rename the file. Then edit `.env` to include:
+
+BOT_TOKEN=your_bot_token_here
+
+### 4. Run the bot
 python src/main.py
-```
