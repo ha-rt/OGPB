@@ -1,5 +1,4 @@
 from discord import Bot
-from dotenv import load_dotenv
 from os import getenv
 from loader import Loader
 
