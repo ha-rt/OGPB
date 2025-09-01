@@ -1,19 +1,19 @@
 import yaml
-import os
+from os import path, getenv, makedirs
 from discord import client, Guild, ApplicationContext, Embed
 from utils.yaml import get_yaml_safely
 
-GUILDS_DIR = "config/guilds"
-EXAMPLE_GUILD_FILE = "example.yaml"
+GUILDS_DIR = getenv("GUILDS_DIR")
+EXAMPLE_GUILD_FILE = getenv("EXAMPLE_GUILD_FILE")
 
 def get_guild_file_path(guild_id: int) -> str:
-    return os.path.join(GUILDS_DIR, f"{guild_id}.yaml")
+    return path.join(GUILDS_DIR, f"{guild_id}.yaml")
 
 def load_or_create_guild_config(bot, guild_id: int) -> dict:
     guild_file_path = get_guild_file_path(guild_id)
 
-    if not os.path.exists(GUILDS_DIR):
-        os.makedirs(GUILDS_DIR)
+    if not path.exists(GUILDS_DIR):
+        makedirs(GUILDS_DIR)
 
     guild_info = get_yaml_safely(guild_file_path)
     if guild_info:
@@ -21,7 +21,7 @@ def load_or_create_guild_config(bot, guild_id: int) -> dict:
 
     print(f"[LOADER] Guild with the ID of {guild_id} added OGPB during an offline period or the file was corrupted.")
 
-    example_config = get_yaml_safely(os.path.join(GUILDS_DIR, EXAMPLE_GUILD_FILE))
+    example_config = get_yaml_safely(path.join(GUILDS_DIR, EXAMPLE_GUILD_FILE))
     if example_config is None:
         example_config = {"levels": {}, "log_channels": {}, "command_overrides": {}}
 
