@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from utils.guilds import get_guild_permissions_for_command,  load_or_create_guild_config
+from utils.guilds import get_guild_permissions_for_command,  load_or_create_guild_data
 
 def summarize_permissions(perms):
     return [perm for perm, allowed in perms if allowed]
@@ -32,7 +32,7 @@ def check_permissions_for_command(ctx: commands.Context) -> bool:
 
     required_level = guild_permissions.get("level", 0)
     if required_level > 0:
-        guild_info = load_or_create_guild_config(guild_id)
+        guild_info = load_or_create_guild_data(guild_id, "config")
         role_levels = guild_info.get("levels", {})
         user_level = max((role_levels.get(str(role.id), 0) for role in user.roles), default=0)
         if user_level < required_level:
