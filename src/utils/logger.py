@@ -9,7 +9,7 @@ class ModerationLogger():
 
     async def log_ban(self, ctx: ApplicationContext, member: User, reason, evidence, notes):
         embed = load_embed_from_yaml("banlog.yaml")
-        embed.fields = [field for field in embed.fields if not ((field.name == "Evidence" and evidence is None) or (field.name == "Ban Note" and notes is None))]
+        embed.fields = [field for field in embed.fields if not ((field.name == "Evidence" and evidence is None) or (field.name == "Note" and notes is None))]
         embed.thumbnail = member.display_avatar.url
         embed = load_data_into_embed(embed, 
                                      {"user_id": member.id, 
