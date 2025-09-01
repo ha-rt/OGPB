@@ -88,7 +88,7 @@ class Moderation(commands.Cog):
         except discord.NotFound:
             await ctx.response.send_message(f"{failed_emoji} <@{user_id}> is not banned.", ephemeral=True)
 
-        await logger.log_unban(ctx, discord_user, notes)
+        await logger.log_unban(ctx.guild, ctx.author, discord_user, notes)
         await ctx.response.send_message(f"{unban_emoji} {discord_user.mention} has had their ban *revoked*.")
 
 def setup(bot: discord.Bot):

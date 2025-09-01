@@ -38,16 +38,16 @@ class ModerationLogger():
                                       })
         await log_info_to_guild(guild.id, "moderation", embed)
 
-    async def log_unban(self, ctx: ApplicationContext, member: User, notes):
+    async def log_unban(self, guild, author, member: User, notes):
         embed = load_embed_from_yaml("unbanlog.yaml")
         embed.fields = [field for field in embed.fields if not (field.name == "Note" and notes is None)]
         embed.thumbnail = member.display_avatar.url
         embed = load_data_into_embed(embed,
                                      {"user_id": member.id, 
-                                      "moderator_id": ctx.author.id, 
+                                      "moderator_id": author.id, 
                                       "note": notes, 
                                       "timestamp_unix": str(int(time.time()))})
-        await log_info_to_guild(ctx.guild.id, "moderation", embed)
+        await log_info_to_guild(guild.id, "moderation", embed)
 
     async def log_bulk_message_delete(self, messages: list[Message]):
         channel =  messages[0].channel
