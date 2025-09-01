@@ -1,5 +1,21 @@
-from yaml import safe_load, YAMLError
-from os import path
+from yaml import safe_load, safe_dump, YAMLError
+from os import makedirs, path
+
+def save_to_yaml_safely(file_path, data):
+    try:
+        dir_name = path.dirname(file_path)
+        if dir_name and not path.exists(dir_name):
+            makedirs(dir_name)
+        
+        with open(file_path, "w") as file:
+            safe_dump(data, file, sort_keys=False)
+        return True
+    except YAMLError as e:
+        print(f"Error writing YAML file: {e}")
+        return False
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return False
 
 def get_yaml_safely(file_path):
     if not path.exists(file_path):

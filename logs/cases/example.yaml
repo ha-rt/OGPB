@@ -1,0 +1,10 @@
+cases:
+  case_id:  # UUID: DICT 
+    type: "example_type", # Current Types: Ban
+    user_id: "user_id",
+    registrar: "moderator_id",
+    info:
+      reason: "example reason"
+      evidence: "example evidence" # For Ban Type Only
+      notes: "example notes" 
+    timestamp: "<t:{timestamp_unix}:f>"
