@@ -1,7 +1,7 @@
 import yaml
 from os import path, getenv, makedirs
 from discord import Bot, Guild, ApplicationContext, Embed
-from utils.yaml import get_yaml_safely
+from utils.yaml import get_yaml_safely, save_to_yaml_safely
 
 GUILDS_DIR = getenv("GUILDS_DIR")
 EXAMPLE_GUILD_FILE = getenv("EXAMPLE_GUILD_FILE")
@@ -39,8 +39,7 @@ def load_or_create_guild_config(guild_id: int) -> dict:
 
     example_config["levels"] = {str(role.id): 0 for role in guild.roles}
 
-    with open(guild_file_path, "w") as f:
-        yaml.safe_dump(example_config, f, default_flow_style=False, sort_keys=False)
+    save_to_yaml_safely(guild_file_path, example_config)
 
     return example_config
 

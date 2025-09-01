@@ -1,4 +1,4 @@
-import yaml
+from utils.yaml import get_yaml_safely
 from discord import Embed
 import os
 
@@ -47,16 +47,14 @@ def load_embed_from_yaml(path: str) -> Embed:
             raise FileNotFoundError(f"Embed file not found: {path}")
         path = alt_path
 
-    with open(path, "r", encoding="utf-8") as f:
-        data = yaml.safe_load(f)
-
+    data = get_yaml_safely(path)
     if not data:
         raise ValueError(f"Embed YAML at {path} is empty or invalid.")
 
     embed = Embed(
         title=data.get("title"),
         description=data.get("description"),
-        color=int(data.get("color", "0x2F3136"), 16), 
+        color=int(data.get("color", "0x2F3136"), 16),
         url=data.get("url")
     )
 
