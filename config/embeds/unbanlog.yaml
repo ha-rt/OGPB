@@ -1,0 +1,23 @@
+title: "Ban Revoked"
+description: ""
+color: "0xE74C3C"
+
+author:
+  name: "OGPB Moderation"
+  icon_url: "https://avatars.githubusercontent.com/u/125516250?v=4"
+
+thumbnail: "https://cdn.vectorstock.com/i/500p/45/59/profile-photo-placeholder-icon-design-in-gray-vector-37114559.jpg"  # Optional user avatar placeholder
+
+fields:
+  - name: "Target"
+    value: "<@{user_id}>"
+    inline: true
+  - name: "Registrar"
+    value: "<@{moderator_id}>"
+    inline: true
+  - name: "Note"
+    value: "{note}"
+    inline: true
+  - name: "Timestamp"
+    value: "<t:{timestamp_unix}:f>"
+    inline: false

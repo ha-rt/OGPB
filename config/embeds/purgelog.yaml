@@ -1,0 +1,18 @@
+title: "Bulk Message Delete"
+description: ""
+color: "0xE74C3C"
+
+author:
+  name: "OGPB Moderation"
+  icon_url: "https://avatars.githubusercontent.com/u/125516250?v=4"
+
+fields:
+- name: "Channel"
+  value: "<#{channel_id}>"
+  inline: true
+- name: "Messages Deleted"
+  value: "{amount}"
+  inline: true
+- name: "Timestamp"
+  value: "<t:{timestamp_unix}:f>"
+  inline: false

@@ -11,9 +11,6 @@ venv/
 
 temp
 
-*/embeds/*
-!example.yaml
-
 logs/*
 !cases
 logs/cases/*

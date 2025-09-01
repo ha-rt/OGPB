@@ -1,0 +1,15 @@
+title: "Ban Notice"
+description: "You have been banned from {server}"
+color: "0xE74C3C"
+
+author:
+  name: "OGPB Moderation"
+  icon_url: "https://avatars.githubusercontent.com/u/125516250?v=4"
+
+fields:
+- name: "Moderator"
+  value: "<@{moderator_id}> ({moderator_id})"
+  inline: true
+- name: "Reason"
+  value: "{reason}"
+  inline: true
