@@ -13,3 +13,8 @@ temp
 
 */embeds/*
 !example.yaml
+
+logs/*
+!cases
+logs/cases/*
+!example.yaml
