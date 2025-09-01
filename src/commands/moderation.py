@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from os import getenv
-from asyncio import create_task
+from contextlib import suppress
 from auth.permissions import check_permissions_for_command
 from utils.autocompleter import banned_users_autocomplete
 from utils.embeds import load_embed_from_yaml, load_data_into_embed
@@ -53,7 +53,8 @@ class Moderation(commands.Cog):
         ban_embed_yaml = load_embed_from_yaml("recievedban.yaml")
         ban_embed = load_data_into_embed(ban_embed_yaml, {"server": ctx.guild.name, "moderator_id": str(ctx.author.id),"reason": reason,})
 
-        create_task(member.send(embed=ban_embed))
+        with suppress(discord.Forbidden, discord.HTTPException):
+            await member.send(embed=ban_embed)
 
         await ctx.guild.ban(member, reason=reason)
         await logger.log_ban(ctx, member, reason, evidence, notes)

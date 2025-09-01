@@ -1,8 +1,10 @@
 from pathlib import Path
 import importlib
+from dotenv import load_dotenv
 from os import getenv
 from utils.yaml import get_yaml_safely
 
+load_dotenv()
 EVENTS_PATH = Path(__file__).parent / "events"
 COMMANDS_PATH = Path(__file__).parent / "commands"
 CONFIG_FILE = getenv("CONFIG_FILE")

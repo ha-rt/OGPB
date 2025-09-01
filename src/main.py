@@ -3,7 +3,6 @@ from dotenv import load_dotenv
 from os import getenv
 from loader import Loader
 
-load_dotenv()
 client = Bot(prefix="-")
 bot_token = getenv("BOT_TOKEN")
 loader = Loader(client)
