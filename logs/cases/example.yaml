@@ -8,3 +8,9 @@ cases:
       evidence: "example evidence" # For Ban Type Only
       notes: "example notes" 
     timestamp: "<t:{timestamp_unix}:f>"
+moderator_cases: 
+  moderator_id: 
+    - case_id
+user_cases:
+  user_id: 
+    - case_id

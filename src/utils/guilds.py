@@ -37,13 +37,15 @@ def load_or_create_guild_data(guild_id: int, data_type: str) -> dict:
         if data_type == "config":
             example_config = {"levels": {}, "log_channels": {}, "command_overrides": {}}
         else:
-            example_config = {"cases": {}}
+            example_config = {"cases": {}, "moderator_cases": {}, "user_cases": {}}
 
     if data_type == "config":
         example_config["command_overrides"] = {}
         example_config["log_channels"] = {}
     else:
         example_config["cases"] = {}
+        example_config["moderator_cases"] = {}
+        example_config["user_cases"] = {}
 
     guild = BOT.get_guild(guild_id)
     if guild is None:

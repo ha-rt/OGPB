@@ -1,0 +1,6 @@
+type: "example_type" # Current Types: Ban
+user_id: "user_id"
+registrar: "moderator_id"
+info: {}
+timestamp: "<t:{timestamp_unix}:f>"
+status: "active"

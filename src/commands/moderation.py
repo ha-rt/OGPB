@@ -1,13 +1,16 @@
 import discord
 from discord.ext import commands
 from os import getenv
+from time import time
 from contextlib import suppress
 from auth.permissions import check_permissions_for_command
 from utils.autocompleter import banned_users_autocomplete
 from utils.embeds import load_embed_from_yaml, load_data_into_embed
 from utils.logger import ModerationLogger
+from utils.cases import CaseClerk
 
 logger = ModerationLogger()
+clerk = CaseClerk()
 ban_emoji = getenv("BAN_EMOJI")
 unban_emoji = getenv("UNBAN_EMOJI")
 failed_emoji = getenv("LOGIC_FAIL_EMOJI")
@@ -56,11 +59,25 @@ class Moderation(commands.Cog):
         with suppress(discord.Forbidden, discord.HTTPException):
             await member.send(embed=ban_embed)
 
+        ban_data = {
+            "type": "Ban",
+            "user_id": str(member.id),
+            "registrar": str(ctx.author.id),
+            "info": {
+                "reason": reason,
+                "evidence": evidence or "No Evidence Provided",
+                "notes": notes or "No Note Provided" 
+            },
+            "timestamp": f"<t:{int(time())}:f>",
+            "status": "active",
+        }
+
         await logger.load_user_into_queue(ctx.guild.id, member, "ban")
         await ctx.guild.ban(member, reason=reason)
-        await logger.log_ban(ctx.guild, ctx.author, member, reason, evidence, notes)
+        case_id = await clerk.create_case(ctx.guild.id, ban_data)
+        await logger.log_ban(ctx.guild, ctx.author, member, reason, evidence, notes, case_id)
         await ctx.response.send_message(
-            f"{ban_emoji} {member.mention} has been banned for *{reason}*",
+            f"{ban_emoji} {member.mention} has been banned for *{reason}*\nCase Id: {case_id}",
         )
 
     @discord.slash_command(
@@ -77,7 +94,6 @@ class Moderation(commands.Cog):
         notes: str = None,
     ):
         try:
-            
             user_id = int(user.split("(")[-1].strip(")"))
             discord_user = await self.bot.fetch_user(user_id)
             await logger.load_user_into_queue(ctx.guild.id, discord_user, "unban")
@@ -88,6 +104,13 @@ class Moderation(commands.Cog):
         except discord.NotFound:
             await ctx.response.send_message(f"{failed_emoji} <@{user_id}> is not banned.", ephemeral=True)
 
+        cases = await clerk.retrieve_active_case_of_type(ctx.guild.id, user_id, "Ban")
+
+        if cases:
+            case = cases[0]
+            case_id = case.get("case_id")
+            if case_id:
+                await clerk.update_status(ctx.guild.id, case_id, "inactive")
         await logger.log_unban(ctx.guild, ctx.author, discord_user, notes)
         await ctx.response.send_message(f"{unban_emoji} {discord_user.mention} has had their ban *revoked*.")
 

@@ -1,4 +1,4 @@
-from discord import ApplicationContext, User, Message, Guild
+from discord import ApplicationContext, User, Message, Guild, EmbedFooter
 import time
 from utils.guilds import log_info_to_guild
 from utils.embeds import load_embed_from_yaml, load_data_into_embed
@@ -24,18 +24,19 @@ class ModerationLogger():
         current_queue.add((guild_id, member.id, type))
 
 
-    async def log_ban(self, guild: Guild, author: User, member: User, reason, evidence, notes):
+    async def log_ban(self, guild: Guild, author: User, member: User, reason, evidence, notes, case_id=None):
         embed = load_embed_from_yaml("banlog.yaml")
         embed.fields = [field for field in embed.fields if not ((field.name == "Evidence" and evidence is None) or (field.name == "Note" and notes is None))]
         embed.thumbnail = member.display_avatar.url
+        embed.footer = EmbedFooter(f"Case ID: {case_id}") if case_id else None
         embed = load_data_into_embed(embed, 
-                                     {"user_id": member.id, 
-                                      "moderator_id": author.id, 
-                                      "reason": reason, 
-                                      "evidence": evidence, 
-                                      "note": notes, 
-                                      "timestamp_unix": str(int(time.time()))
-                                      })
+                                    {"user_id": member.id, 
+                                    "moderator_id": author.id, 
+                                    "reason": reason, 
+                                    "evidence": evidence, 
+                                    "note": notes, 
+                                    "timestamp_unix": str(int(time.time()))
+                                    })
         await log_info_to_guild(guild.id, "moderation", embed)
 
     async def log_unban(self, guild, author, member: User, notes):
