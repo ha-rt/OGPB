@@ -17,7 +17,7 @@ def save_to_yaml_safely(file_path, data):
         print(f"Unexpected error: {e}")
         return False
 
-def get_yaml_safely(file_path):
+def get_yaml_safely(file_path) -> dict:
     if not path.exists(file_path):
         return None
 
