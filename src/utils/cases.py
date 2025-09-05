@@ -111,7 +111,6 @@ class CaseClerk:
 
         save_to_yaml_safely(f"{CASES_DIR}/{guild_id}.yaml", guild_data)
 
-        print(f"[CASES] Created case {case_id} of type '{case_type}' for guild {guild_id}")
         return case_id
     
     async def retrieve_case(self, guild_id, case_id=None, moderator_id=None, user_id=None):
@@ -153,7 +152,6 @@ class CaseClerk:
         case["status"] = new_status
 
         save_to_yaml_safely(f"{CASES_DIR}/{guild_id}.yaml", guild_data)
-        print(f"[CASES] Updated status of case {case_id} to '{new_status}' for guild {guild_id}")
         return True
     
     async def retrieve_active_case_of_type(self, guild_id, user_id, case_type):
@@ -173,3 +171,11 @@ class CaseClerk:
         ]
 
         return active_cases
+
+    async def retrieve_all_case_ids(self, guild_id):
+        guild_data = load_or_create_guild_data(guild_id, "cases")
+        if not isinstance(guild_data, dict):
+            return []
+
+        cases = guild_data.get("cases", {})
+        return list(cases.keys())
