@@ -1,4 +1,6 @@
-from yaml import safe_load, safe_dump, YAMLError
+from importlib import import_module
+yaml = import_module("yaml")
+safe_dump, YAMLError, safe_load = yaml.safe_dump, yaml.YAMLError, yaml.safe_load
 from os import makedirs, path
 
 def save_to_yaml_safely(file_path, data):
