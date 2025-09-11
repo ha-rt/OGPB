@@ -17,14 +17,17 @@ class Cases(commands.Cog):
     def __init__(self, bot: discord.Bot):
         self.bot = bot
 
-    case = discord.SlashCommandGroup("case", "Case management commands")
+    case = discord.SlashCommandGroup("case", "Case management commands", default_member_permissions=discord.Permissions(view_audit_log=True))
 
-    @case.command(name="view", description="View details about a specific case")
+    @case.command(name="view", 
+                  description="View details about a specific case", 
+                  )
     @commands.check(check_permissions_for_command)
+    @commands.has_permissions(view_audit_log=True)
     async def view(
         self,
         ctx: discord.ApplicationContext,
-        case_id: discord.Option(str, "The case ID to view", autocomplete=case_automplete)  # type: ignore
+        case_id: discord.Option(str, "The case ID to view", autocomplete=case_automplete),  # type: ignore
     ):
         guild_id = str(ctx.guild.id)
 

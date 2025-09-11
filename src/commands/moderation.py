@@ -28,6 +28,7 @@ class Moderation(commands.Cog):
     )
     @commands.check(check_permissions_for_command)
     @commands.bot_has_permissions(manage_messages=True)
+    @commands.has_permissions(manage_messages=True)
     async def purge(self, ctx: discord.ApplicationContext, amount: int):
         if amount < 1 or amount > 100:
             await ctx.response.send_message("You can purge between 1 and 100 messages.", ephemeral=True)
@@ -45,6 +46,7 @@ class Moderation(commands.Cog):
     )
     @commands.check(check_permissions_for_command)
     @commands.bot_has_permissions(ban_members=True)
+    @commands.has_permissions(ban_members=True)
     async def ban(
         self, 
         ctx: discord.ApplicationContext, 
@@ -87,6 +89,7 @@ class Moderation(commands.Cog):
     )
     @commands.check(check_permissions_for_command)
     @commands.bot_has_permissions(ban_members=True)
+    @commands.has_permissions(ban_members=True)
     async def unban(
         self, 
         ctx: discord.ApplicationContext, 
